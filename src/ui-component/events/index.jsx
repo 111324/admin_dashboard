@@ -43,7 +43,7 @@ export default function Events() {
   const [form, setForm] = useState({
     eventName: "",
     description: "",
-    category: "",
+    eventType: "", // ✅ FIXED
     city: "",
     eventLocation: "",
     eventDate: "",
@@ -84,7 +84,7 @@ export default function Events() {
     setForm({
       eventName: "",
       description: "",
-      category: "",
+      eventType: "",
       city: "",
       eventLocation: "",
       eventDate: "",
@@ -207,6 +207,7 @@ export default function Events() {
                   onClick={() => {
                     setForm({
                       ...e,
+                      eventType: e.eventType || "",
                       eventDate: e.eventDate?.split("T")[0],
                       bannerImage: null
                     });
@@ -273,8 +274,8 @@ export default function Events() {
               <InputLabel>Event Type *</InputLabel>
 
               <Select
-                name="category"
-                value={form.category || ""}
+                name="eventType"
+                value={form.eventType || ""}
                 onChange={handleChange}
                 label="Event Type *"
               >
@@ -283,7 +284,7 @@ export default function Events() {
                 </MenuItem>
 
                 {eventTypes.map((type) => (
-                  <MenuItem key={type._id} value={type.name}>
+                  <MenuItem key={type._id} value={type._id}>
                     {type.name}
                   </MenuItem>
                 ))}
