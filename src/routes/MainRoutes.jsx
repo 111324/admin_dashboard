@@ -7,12 +7,12 @@ import AuthGuard from 'utils/authGuard';
 
 // lazy pages
 const DashboardDefault = lazy(() => import('ui-component/dashboard'));
-const Events = lazy(() => import('ui-component/events'));
-const TicketManagement = lazy(() => import('ui-component/tickets'))
+// const Events = lazy(() => import('ui-component/events'));
+// const TicketManagement = lazy(() => import('ui-component/tickets'))
 const Bookings = lazy(() => import('ui-component/bookings/order'))
 const Profile = lazy(() => import('ui-component/profile'))
-const Revenue = lazy(()=>import('ui-component/revenue'))
-const Subscription = lazy(()=> import('ui-component/subscription'))
+// const Revenue = lazy(()=>import('ui-component/revenue'))
+// const Subscription = lazy(()=> import('ui-component/subscription'))
 const UserFeedbackPage = lazy(() => import('ui-component/user_feedback/index'));
 const UserRatingPage = lazy(() => import('ui-component/user_rating/index'));
 const NopageFound = lazy(() => import('ui-component/common/no-page/NoPage'));
@@ -43,7 +43,7 @@ const MainRoutes = {
       path: 'events',
       element: (
         <Suspense fallback={<Loader />}>
-          <Events />
+          <NopageFound />
         </Suspense>
       )
 
@@ -52,7 +52,7 @@ const MainRoutes = {
       path: 'tickets',
       element: (
         <Suspense fallback={<Loader />}>
-          <TicketManagement />
+          <NopageFound />
         </Suspense>
       )
     },
@@ -68,7 +68,7 @@ const MainRoutes = {
       path: 'revenue',
       element: (
         <Suspense fallback={<Loader />}>
-          <Revenue />
+          <NopageFound />
         </Suspense>
       )
     },
@@ -100,7 +100,7 @@ const MainRoutes = {
       path: 'subscription',
       element: (
         <Suspense fallback={<Loader />}>
-          <Subscription />
+          <NopageFound />
         </Suspense>
       )
 
