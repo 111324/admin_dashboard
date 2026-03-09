@@ -1,60 +1,51 @@
-import { takeLatest, put, call } from "redux-saga/effects";
-import appConfig from "../../config";
+import { call, put, takeLatest } from "redux-saga/effects";
+import axios from "axios";
 import {
-  getVendorOrdersRequest,
-  getVendorOrdersSuccess,
-  getVendorOrdersFailure,
-  updateOrderStatusRequest,
-  updateOrderStatusSuccess,
-  updateOrderStatusFailure,
+  getOrdersRequest,
+  getOrdersSuccess,
+  getOrdersFail
 } from "./slice";
-import commonApi from "../api";
 
-/* GET VENDOR ORDERS */
-function* getVendorOrdersSaga() {
+/* API */
+
+const getOrdersApi = () =>
+  axios.get(
+    "http://localhost:5000/api/all-orders",
+    { withCredentials: true }
+  );
+
+/* SAGA */
+
+function* getOrdersSaga() {
+
   try {
-    const res = yield call(commonApi, {
-      api: `${appConfig.ip}/api/vendor-orders`,
-      method: "GET",
-      authorization: true,
-    });
 
-    yield put(getVendorOrdersSuccess(res?.data || res));
+    const response = yield call(getOrdersApi);
+
+    console.log("API RESPONSE:", response.data); // 👈 ADD
+
+    yield put(getOrdersSuccess(response.data.orders));
 
   } catch (error) {
+
+    console.log("API ERROR:", error.response); // 👈 ADD
+
     yield put(
-      getVendorOrdersFailure(
-        error?.response?.data?.message || error.message
+      getOrdersFail(
+        error.response?.data?.message || "Failed to fetch orders"
       )
     );
+
   }
-}
 
-/* UPDATE ORDER STATUS */
-function* updateOrderStatusSaga(action) {
-  try {
-    const { orderId, status } = action.payload;
-
-    const res = yield call(commonApi, {
-      api: `${appConfig.ip}/api/orders/${orderId}/status`,
-      method: "PATCH",
-      body: { status },
-      authorization: true,
-    });
-
-    yield put(updateOrderStatusSuccess(res?.data || res));
-
-  } catch (error) {
-    yield put(
-      updateOrderStatusFailure(
-        error?.response?.data?.message || error.message
-      )
-    );
-  }
 }
 
 /* WATCHER */
-export default function* orderActionWatcher() {
-  yield takeLatest(getVendorOrdersRequest.type, getVendorOrdersSaga);
-  yield takeLatest(updateOrderStatusRequest.type, updateOrderStatusSaga);
+
+function* orderActionWatcher() {
+
+  yield takeLatest(getOrdersRequest.type, getOrdersSaga);
+
 }
+
+export default orderActionWatcher;

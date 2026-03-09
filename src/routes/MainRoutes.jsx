@@ -16,6 +16,10 @@ const Profile = lazy(() => import('ui-component/profile'))
 const UserFeedbackPage = lazy(() => import('ui-component/user_feedback/index'));
 const UserRatingPage = lazy(() => import('ui-component/user_rating/index'));
 const NopageFound = lazy(() => import('ui-component/common/no-page/NoPage'));
+const Vendor = lazy(() => import('ui-component/vendors/vendor'))
+const Categories = lazy(() => import('ui-component/catrgories/category'))
+
+
 
 const Loader = () => <div>Loading...</div>;
 
@@ -40,19 +44,19 @@ const MainRoutes = {
       )
     },
     {
-      path: 'events',
+      path: 'vendors',
       element: (
         <Suspense fallback={<Loader />}>
-          <NopageFound />
+          <Vendor/>
         </Suspense>
       )
 
     },
     {
-      path: 'tickets',
+      path: 'categories',
       element: (
         <Suspense fallback={<Loader />}>
-          <NopageFound />
+          <Categories />
         </Suspense>
       )
     },

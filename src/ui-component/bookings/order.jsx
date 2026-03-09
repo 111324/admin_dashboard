@@ -1,137 +1,149 @@
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-import React, { useEffect, useState } from "react";
-import "./Order.css";
+import React, { useEffect } from "react";
+import {
+  Box,
+  Typography,
+  Card,
+  Grid,
+  Chip
+} from "@mui/material";
+import { DataGrid } from "@mui/x-data-grid";
 import { useDispatch, useSelector } from "react-redux";
-import { getVendorOrdersRequest } from "../../container/orderContainer/slice";
+import { getOrdersRequest } from "../../container/orderContainer/slice";
 
-const Order = () => {
+const Bookings = () => {
+
   const dispatch = useDispatch();
 
-  const { orders = [], loading, error } = useSelector(
-    (state) => state.order || {}
-  );
+  const orders = useSelector((state) => state.order?.orders || []);
 
-  const [search, setSearch] = useState("");
-  const [status, setStatus] = useState("");
-
-  // Fetch Orders from saga
   useEffect(() => {
-    dispatch(getVendorOrdersRequest());
+    dispatch(getOrdersRequest());
   }, [dispatch]);
 
-  // ✅ Filter Orders by search + status
-  const filteredOrders = orders.filter((order) => {
-    const customerName = order.userId?.name || "";
-
-    const matchesSearch = customerName
-      .toLowerCase()
-      .includes(search.toLowerCase());
-
-    const matchesStatus = status
-      ? order.paymentStatus === status
-      : true;
-
-    return matchesSearch && matchesStatus;
-  });
+  const columns = [
+    {
+      field: "_id",
+      headerName: "Order ID",
+      flex: 1
+    },
+    {
+      field: "event",
+      headerName: "Event",
+      flex: 2,
+      valueGetter: (params) =>
+        params?.row?.eventId?.eventName || "N/A"
+    },
+    {
+      field: "customer",
+      headerName: "Customer",
+      flex: 2,
+      valueGetter: (params) =>
+        params?.row?.userId?.name || "N/A"
+    },
+    {
+      field: "vendor",
+      headerName: "Vendor",
+      flex: 2,
+      valueGetter: (params) =>
+        params?.row?.vendorId?.vendorName || "N/A"
+    },
+    {
+      field: "date",
+      headerName: "Date",
+      flex: 1.5,
+      valueGetter: (params) =>
+        params?.row?.createdAt
+          ? new Date(params.row.createdAt).toLocaleDateString()
+          : "N/A"
+    },
+    {
+      field: "tickets",
+      headerName: "Tickets",
+      flex: 1,
+      valueGetter: (params) => params?.row?.quantity || 0
+    },
+    {
+      field: "amount",
+      headerName: "Amount",
+      flex: 1,
+      valueGetter: (params) =>
+        params?.row?.totalAmount
+          ? `₹${params.row.totalAmount}`
+          : "₹0"
+    },
+    {
+      field: "status",
+      headerName: "Status",
+      flex: 1,
+      renderCell: (params) => (
+        <Chip
+          label={params?.row?.orderStatus || "Pending"}
+          color={
+            params?.row?.orderStatus === "Confirmed"
+              ? "success"
+              : params?.row?.orderStatus === "Pending"
+              ? "warning"
+              : "error"
+          }
+        />
+      )
+    }
+  ];
 
   return (
-    <div className="order-container">
-      {/* Header */}
-      <div className="order-header">
-        <h2>Orders</h2>
-        <p>Manage and track customer bookings</p>
-      </div>
+    <Box p={3}>
 
-      {/* Controls */}
-      <div className="order-controls">
-        <select
-          value={status}
-          onChange={(e) => setStatus(e.target.value)}
-        >
-          <option value="">All Status</option>
-          <option value="paid">Paid</option>
-          <option value="pending">Pending</option>
-          <option value="failed">Failed</option>
-        </select>
+      <Typography
+        variant="h5"
+        fontWeight="bold"
+        mb={3}
+      >
+        Total Bookings
+      </Typography>
 
-        <input
-          type="text"
-          placeholder="Search by customer..."
-          value={search}
-          onChange={(e) => setSearch(e.target.value)}
-        />
-      </div>
+      {/* Summary Cards */}
+
+      <Grid container spacing={2} mb={3}>
+
+        <Grid item xs={12} md={3}>
+          <Card sx={{ p: 2 }}>
+            <Typography variant="body2">
+              Total Bookings
+            </Typography>
+            <Typography variant="h6">
+              {orders.length}
+            </Typography>
+          </Card>
+        </Grid>
+
+      </Grid>
 
       {/* Table */}
-      <div className="order-table">
-        {loading ? (
-          <p style={{ padding: "20px" }}>Loading orders...</p>
-        ) : error ? (
-          <p style={{ padding: "20px", color: "red" }}>
-            Failed to load orders
-          </p>
-        ) : (
-          <table>
-            <thead>
-              <tr>
-                <th>#</th>
-                <th>Customer</th>
-                <th>Date</th>
-                <th>Service</th>
-                <th>Amount</th>
-                <th>Status</th>
-              </tr>
-            </thead>
 
-            <tbody>
-              {filteredOrders.length > 0 ? (
-                filteredOrders.map((order, index) => (
-                  <tr key={order._id}>
-                    <td>{index + 1}</td>
-                    <td>{order.userId?.name}</td>
+      <Box
+        sx={{
+          height: 500,
+          background: "#1e1e2f",
+          borderRadius: 2
+        }}
+      >
 
-                    <td>
-                      {new Date(order.createdAt).toLocaleDateString()}
-                    </td>
+        <DataGrid
+          rows={orders}
+          columns={columns}
+          getRowId={(row) => row._id}
+          pageSizeOptions={[5, 10, 20]}
+          initialState={{
+            pagination: {
+              paginationModel: { pageSize: 5 }
+            }
+          }}
+        />
 
-                    <td>{order.eventId?.title}</td>
+      </Box>
 
-                    <td>₹ {order.totalAmount}</td>
-
-                    <td>
-                      <span className={`status ${order.paymentStatus}`}>
-                        {order.paymentStatus}
-                      </span>
-                    </td>
-                  </tr>
-                ))
-              ) : (
-                <tr>
-                  <td colSpan="6" style={{ textAlign: "center" }}>
-                    No Orders Found
-                  </td>
-                </tr>
-              )}
-            </tbody>
-          </table>
-        )}
-      </div>
-    </div>
+    </Box>
   );
 };
 
-
-export default Order;
+export default Bookings;

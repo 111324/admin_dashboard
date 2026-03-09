@@ -1,62 +1,38 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const orderSlice = createSlice({
-  name: "order",
-  initialState: {
-    loading: false,
-    error: null,
-    orders: [],
-    total: 0,
-    page: 1,
-    totalPages: 0,
-  },
+const initialState = {
+  loading: false,
+  orders: [],
+  error: null
+};
 
+const orderSlice = createSlice({
+  name: "orders",
+  initialState,
   reducers: {
 
-
-    /* GET VENDOR ORDERS */
-    getVendorOrdersRequest: (state) => {
+    getOrdersRequest: (state) => {
       state.loading = true;
       state.error = null;
     },
-   getVendorOrdersSuccess: (state, action) => {
-  state.loading = false;
-  state.orders = action.payload;   // 👈 change this
-  state.error = null;
-},
-    getVendorOrdersFailure: (state, action) => {
+
+    getOrdersSuccess: (state, action) => {
       state.loading = false;
-      state.error = action.payload;
+      state.orders = action.payload;
     },
 
-
-    /* UPDATE ORDER STATUS */
-    updateOrderStatusRequest: (state) => {
-      state.loading = true;
-      state.error = null;
-    },
-    updateOrderStatusSuccess: (state, action) => {
-      state.loading = false;
-      state.orders = state.orders.map((order) =>
-        order._id === action.payload._id ? action.payload : order
-      );
-    },
-    updateOrderStatusFailure: (state, action) => {
+    getOrdersFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
-    },
-  },
+    }
+
+  }
 });
 
 export const {
-
-  getVendorOrdersRequest,
-  getVendorOrdersSuccess,
-  getVendorOrdersFailure,
- 
-  updateOrderStatusRequest,
-  updateOrderStatusSuccess,
-  updateOrderStatusFailure,
+  getOrdersRequest,
+  getOrdersSuccess,
+  getOrdersFail
 } = orderSlice.actions;
 
 export default orderSlice.reducer;

@@ -17,18 +17,18 @@ const RoleMenu = {
       breadcrumbs: false
     },
     {
-  id: 'events',
-  title: 'Events',
+  id: 'vendors',
+  title: 'vendors',
   type: 'item',
-  url: '/events',
+  url: '/vendors',
   icon: icons.IconCalendarEvent, // you can change icon
   breadcrumbs: false
 },
 {
-    id: 'ticket-management',
-    title: 'Ticket Management',
+    id: 'categories',
+    title: 'categories',
     type: 'item',
-    url: '/tickets',
+    url: '/categories',
     icon: icons.IconTicket,
     breadcrumbs: false
   },

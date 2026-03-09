@@ -10,7 +10,8 @@ import orderReducer from "../container/orderContainer/slice"
 // import revenueReducer from "../container/revenueContainer/slice"
 // import subscriptionReducer from "../container/subscription/slice"
 // ==============================|| COMBINE REDUCER ||============================== //
-
+import vendorReducer from "../container/vendorContainer/slice"
+import categiesReducer from "../container/categoryContainer/slice"
 const reducer = combineReducers({
   login: loginReducer,
   customization: customizationReducer,
@@ -19,7 +20,9 @@ const reducer = combineReducers({
   // ticket: ticketReducer,
   // revenue:revenueReducer,
   // subscription:subscriptionReducer,
-  order: orderReducer
+  order: orderReducer,
+  vendor:vendorReducer,
+  category:categiesReducer
 });
 
 export default reducer;

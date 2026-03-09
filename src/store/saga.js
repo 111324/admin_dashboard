@@ -6,7 +6,10 @@ import LoginActionWatcher from 'container/LoginContainer/saga';
 // import ticketActionWatcher from 'container/ticketcontainer/saga';
 // import RevenueWatcher from 'container/revenueContainer/saga';
 // import SubscriptionWatcher from 'container/subscription/saga';
-import  orderActionWatcher from 'container/orderContainer/saga';
+import  orderActionWatcher from 'container/orderContainer/saga'
+import vendorSaga from "container/vendorContainer/saga";
+import eventTypeSaga from "container/categoryContainer/saga"
+ 
 
 
 function* rootSaga() {
@@ -17,7 +20,10 @@ function* rootSaga() {
     // call(ticketActionWatcher),
     // call(RevenueWatcher),
     // call(SubscriptionWatcher),
-    call(orderActionWatcher)
+    call(orderActionWatcher),
+     call(vendorSaga),
+     call(eventTypeSaga)
+
 
   ]);
 }
