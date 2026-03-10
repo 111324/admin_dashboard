@@ -20,75 +20,48 @@ const Bookings = () => {
     dispatch(getOrdersRequest());
   }, [dispatch]);
 
-  const columns = [
-    {
-      field: "_id",
-      headerName: "Order ID",
-      flex: 1
-    },
-    {
-      field: "event",
-      headerName: "Event",
-      flex: 2,
-      valueGetter: (params) =>
-        params?.row?.eventId?.eventName || "N/A"
-    },
-    {
-      field: "customer",
-      headerName: "Customer",
-      flex: 2,
-      valueGetter: (params) =>
-        params?.row?.userId?.name || "N/A"
-    },
-    {
-      field: "vendor",
-      headerName: "Vendor",
-      flex: 2,
-      valueGetter: (params) =>
-        params?.row?.vendorId?.vendorName || "N/A"
-    },
-    {
-      field: "date",
-      headerName: "Date",
-      flex: 1.5,
-      valueGetter: (params) =>
-        params?.row?.createdAt
-          ? new Date(params.row.createdAt).toLocaleDateString()
-          : "N/A"
-    },
-    {
-      field: "tickets",
-      headerName: "Tickets",
-      flex: 1,
-      valueGetter: (params) => params?.row?.quantity || 0
-    },
-    {
-      field: "amount",
-      headerName: "Amount",
-      flex: 1,
-      valueGetter: (params) =>
-        params?.row?.totalAmount
-          ? `₹${params.row.totalAmount}`
-          : "₹0"
-    },
-    {
-      field: "status",
-      headerName: "Status",
-      flex: 1,
-      renderCell: (params) => (
-        <Chip
-          label={params?.row?.orderStatus || "Pending"}
-          color={
-            params?.row?.orderStatus === "Confirmed"
-              ? "success"
-              : params?.row?.orderStatus === "Pending"
-              ? "warning"
-              : "error"
-          }
-        />
-      )
-    }
-  ];
+const columns = [
+  {
+    field: "event",
+    headerName: "Event",
+    flex: 2,
+    valueGetter: (value, row) => row?.eventId?.eventName || "-"
+  },
+  {
+    field: "customer",
+    headerName: "Customer",
+    flex: 2,
+    valueGetter: (value, row) => row?.userId?.name || "Guest"
+  },
+  {
+    field: "vendor",
+    headerName: "Vendor",
+    flex: 2,
+    valueGetter: (value, row) => row?.vendorId?.vendorName || "-"
+  },
+  {
+    field: "date",
+    headerName: "Date",
+    flex: 1.5,
+    valueGetter: (value, row) =>
+      row?.createdAt
+        ? new Date(row.createdAt).toLocaleDateString("en-IN")
+        : "-"
+  },
+  {
+    field: "tickets",
+    headerName: "Tickets",
+    flex: 1,
+    valueGetter: (value, row) => row?.quantity ?? "-"
+  },
+  {
+    field: "amount",
+    headerName: "Amount",
+    flex: 1,
+    valueGetter: (value, row) =>
+      row?.totalAmount ? `₹${row.totalAmount}` : "-"
+  }
+];
 
   return (
     <Box p={3}>
