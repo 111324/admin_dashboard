@@ -3,44 +3,63 @@ import { Grid, Typography, Box } from '@mui/material';
 import { UserOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import AnalyticsCard from './AnalyticsCard';
-
-// import { getFacilitiesCount,  } from 'container/FacilityContainer/slice';
-// import { getIssuesCount, } from 'container/ReportIssuesContainer/slice';
-// import { getRatings, } from 'container/RatingContainer/slice';
-// import { getUserCount, getUsers } from 'container/UsersContainer/slice';
-// import { dashCount } from 'container/DashboardContainer/slice';
 import MainCard from 'ui-component/cards/MainCard';
+import axios from "axios";
 
 const DashboardDefault = () => {
   const dispatch = useDispatch();
   const [limit] = useState(5);
   const [page] = useState(0);
 
+  const [orders, setOrders] = useState([]);
+  const [vendors, setVendors] = useState([]); // ✅ NEW
+
   useEffect(() => {
-    const urls = {
-      facilities: `facilities?filter={"limit":${limit},"skip":${page},"order":["createdOn DESC"]}`,
-      users: `users?filter={"limit":${limit},"skip":${page},"order":["createdOn DESC"]}`,
-      issues: `issues?filter={"limit":${limit},"skip":${page},"order":["createdOn DESC"]}`,
-      feedback: `feedbacks?filter={"limit": 5,"skip": 0}`
+
+    const fetchOrders = async () => {
+      try {
+
+        const res = await axios.get(
+          "http://localhost:5000/api/all-orders",
+          { withCredentials: true }
+        );
+
+        setOrders(res.data.orders || []);
+
+      } catch (error) {
+        console.error("Error fetching orders:", error);
+      }
     };
 
-    const draftFacilitiesUrl = `facilities?filter=${encodeURIComponent(
-      JSON.stringify({
-        where: { status: 'draft' }
-      })
-    )}`;
+    // ✅ Fetch Vendors
+    const fetchVendors = async () => {
+      try {
 
-    // dispatch(getFacilitiesCount('facilities/count'));
-    // dispatch(getFacilities(urls.facilities));
-    // dispatch(getDraftFacilities(draftFacilitiesUrl));
-    // dispatch(getIssuesCount());
-    // dispatch(getRatings(urls.feedback));
-    // dispatch(getRatingCount(`feedbacks/count`));
-    // dispatch(getUserCount(`users/count`));
-    // dispatch(getIssueReports(urls.issues));
-    // dispatch(getUsers(urls.users));
-    // dispatch(dashCount());
+        const res = await axios.get(
+          "http://localhost:5000/api/vendors"
+        );
+
+        console.log("Vendors API:", res.data);
+
+        setVendors(res.data.vendors || []);
+
+      } catch (error) {
+        console.error("Error fetching vendors:", error);
+      }
+    };
+
+    fetchOrders();
+    fetchVendors();
+
   }, [dispatch, limit, page]);
+
+  // Total tickets sold
+  const totalTicketsSold = (orders || []).reduce((sum, order) => {
+    return sum + (order.quantity || 0);
+  }, 0);
+
+  // ✅ Vendor count
+  const totalVendors = vendors.length;
 
   return (
     <MainCard sx={{ boxShadow: 'none' }}>
@@ -52,7 +71,7 @@ const DashboardDefault = () => {
             display: 'flex',
             alignItems: 'center',
             justifyContent: 'space-between',
-            bgcolor: '#f2f5f8',
+            bgcolor: '#090a0a',
             borderRadius: 2
           }}
         >
@@ -73,15 +92,25 @@ const DashboardDefault = () => {
             >
               <UserOutlined />
             </Box>
+
             <Box>
-              <Typography sx={{ fontSize: 14, fontWeight: 600 }}>Platform Admin Dashboard</Typography>
-              <Typography sx={{ fontSize: 13 }}>Hello, Admin 👋</Typography>
+              <Typography sx={{ fontSize: 14, fontWeight: 600 }}>
+                Platform Admin Dashboard
+              </Typography>
+
+              <Typography sx={{ fontSize: 13 }}>
+                Hello, Admin 👋
+              </Typography>
             </Box>
           </Box>
         </Box>
 
-        {/* Main Analytics Section */}
-        <AnalyticsCard />
+        {/* Analytics Cards */}
+        <AnalyticsCard 
+          totalTicketsSold={totalTicketsSold}
+          totalVendors={totalVendors}   // ✅ send vendor count
+        />
+
       </Box>
     </MainCard>
   );

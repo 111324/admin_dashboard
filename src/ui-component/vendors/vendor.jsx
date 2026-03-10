@@ -272,7 +272,7 @@ const Vendor = () => {
             width: 420,
             p: 4,
             height: "100%",
-            background: "#fafafa"
+            background: "#020202"
           }}
         >
 
