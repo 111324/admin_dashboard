@@ -40,22 +40,8 @@ const RoleMenu = {
     icon: icons.IconClipboardList,
     breadcrumbs: false
   },
-  // {
-  //   id: 'revenue-reports',
-  //   title: 'Revenue Reports',
-  //   type: 'item',
-  //   url: '/revenue',
-  //   icon: icons.IconChartLine,
-  //   breadcrumbs: false
-  // },
-  {
-    id: 'profile',
-    title: 'Profile',
-    type: 'item',
-    url: '/profile',
-    icon: icons.IconUser,
-    breadcrumbs: false
-  },
+  
+ 
   {
     id: 'subscription',
     title: 'Subscription',
@@ -98,17 +84,6 @@ const RoleMenu = {
     //   icon: icons.IconMessageCircle ,
     //   breadcrumbs: false
     // },
-        {
-      id: 'rating',
-      title: 'Ratings & Feedback',
-      type: 'item',
-      url: '/rating',
-      icon: icons.IconStar,
-      breadcrumbs: false
-    },
-    
-
-
 
   ]
 };
