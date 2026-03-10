@@ -6,24 +6,22 @@ const subscriptionSlice = createSlice({
   initialState: {
     loading: false,
     error: null,
-    data: null
+    vendors: []
   },
 
   reducers: {
 
-    /* CREATE / UPDATE SUBSCRIPTION */
-
-    adminUpsertSubscription: (state) => {
+    getVendorSubscriptions: (state) => {
       state.loading = true;
       state.error = null;
     },
 
-    adminUpsertSubscriptionSuccess: (state, action) => {
+    getVendorSubscriptionsSuccess: (state, action) => {
       state.loading = false;
-      state.data = action.payload;
+      state.vendors = action.payload;
     },
 
-    adminUpsertSubscriptionFail: (state, action) => {
+    getVendorSubscriptionsFail: (state, action) => {
       state.loading = false;
       state.error = action.payload;
     }
@@ -32,9 +30,9 @@ const subscriptionSlice = createSlice({
 });
 
 export const {
-  adminUpsertSubscription,
-  adminUpsertSubscriptionSuccess,
-  adminUpsertSubscriptionFail
+  getVendorSubscriptions,
+  getVendorSubscriptionsSuccess,
+  getVendorSubscriptionsFail
 } = subscriptionSlice.actions;
 
 export default subscriptionSlice.reducer;

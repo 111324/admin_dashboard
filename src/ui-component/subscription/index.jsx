@@ -1,108 +1,92 @@
-import React, { useState } from "react";
-import { useDispatch } from "react-redux";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 
 import {
   Box,
   Typography,
-  TextField,
-  Button,
-  MenuItem,
-  Paper
+  Paper,
+  Table,
+  TableHead,
+  TableRow,
+  TableCell,
+  TableBody
 } from "@mui/material";
 
-import { adminUpsertSubscription } from "../../container/subscriptioncontainer/slice";
+import { getVendorSubscriptions } from "../../container/subscriptioncontainer/slice";
 
 const AdminSubscription = () => {
 
   const dispatch = useDispatch();
 
-  const [form, setForm] = useState({
-    vendorId: "",
-    plan: "basic",
-    status: "active"
-  });
+const { vendors = [], loading = false } =
+  useSelector((state) => state.subscription || {});
+  useEffect(() => {
 
-  const handleChange = (e) => {
+    dispatch(getVendorSubscriptions());
 
-    setForm({
-      ...form,
-      [e.target.name]: e.target.value
-    });
-
-  };
-
-  const handleSubmit = () => {
-
-    dispatch(
-      adminUpsertSubscription({
-        vendorId: form.vendorId,
-        plan: form.plan,
-        status: form.status
-      })
-    );
-
-  };
+  }, [dispatch]);
 
   return (
 
     <Box sx={{ p: 4 }}>
 
       <Typography variant="h4" sx={{ mb: 3 }}>
-        Manage Vendor Subscription
+        Vendor Subscriptions
       </Typography>
 
-      <Paper sx={{ p: 3, maxWidth: 500 }}>
+      <Paper>
 
-        <TextField
-          fullWidth
-          label="Vendor ID"
-          name="vendorId"
-          value={form.vendorId}
-          onChange={handleChange}
-          margin="normal"
-        />
+        <Table>
 
-        <TextField
-          select
-          fullWidth
-          label="Plan"
-          name="plan"
-          value={form.plan}
-          onChange={handleChange}
-          margin="normal"
-        >
-          <MenuItem value="basic">Basic</MenuItem>
-          <MenuItem value="professional">Professional</MenuItem>
-          <MenuItem value="enterprise">Enterprise</MenuItem>
-        </TextField>
+          <TableHead>
 
-        <TextField
-          select
-          fullWidth
-          label="Status"
-          name="status"
-          value={form.status}
-          onChange={handleChange}
-          margin="normal"
-        >
-          <MenuItem value="active">Active</MenuItem>
-          <MenuItem value="cancelled">Cancelled</MenuItem>
-          <MenuItem value="expired">Expired</MenuItem>
-        </TextField>
+            <TableRow>
 
-        <Button
-          variant="contained"
-          fullWidth
-          sx={{ mt: 3 }}
-          onClick={handleSubmit}
-        >
-          Save Subscription
-        </Button>
+              <TableCell>Vendor</TableCell>
+              <TableCell>Plan</TableCell>
+              <TableCell>Status</TableCell>
+              <TableCell>Renewal</TableCell>
+
+            </TableRow>
+
+          </TableHead>
+
+          <TableBody>
+
+            {vendors?.map((vendor) => (
+
+              <TableRow key={vendor._id}>
+
+                <TableCell>{vendor.vendor?.vendorName}</TableCell>
+
+                <TableCell>
+                  {vendor.plan}
+                </TableCell>
+
+                <TableCell>
+                  {vendor.status}
+                </TableCell>
+
+                <TableCell>
+                  {vendor.renewalDate
+                    ? new Date(vendor.renewalDate).toDateString()
+                    : "N/A"}
+                </TableCell>
+
+              </TableRow>
+
+            ))}
+
+          </TableBody>
+
+        </Table>
 
       </Paper>
 
     </Box>
+
   );
+
 };
 
 export default AdminSubscription;
