@@ -58,6 +58,11 @@ const DashboardDefault = () => {
     return sum + (order.quantity || 0);
   }, 0);
 
+  // ✅ Total Revenue from orders
+  const totalRevenue = (orders || []).reduce((sum, order) => {
+    return sum + (order.totalAmount || 0);
+  }, 0);
+
   // ✅ Vendor count
   const totalVendors = vendors.length;
 
@@ -108,7 +113,8 @@ const DashboardDefault = () => {
         {/* Analytics Cards */}
         <AnalyticsCard 
           totalTicketsSold={totalTicketsSold}
-          totalVendors={totalVendors}   // ✅ send vendor count
+          totalVendors={totalVendors}
+          totalRevenue={totalRevenue}   // ✅ added revenue
         />
 
       </Box>

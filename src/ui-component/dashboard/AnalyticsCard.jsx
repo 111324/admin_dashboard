@@ -7,7 +7,7 @@ import { TagsOutlined, DollarOutlined, CalendarOutlined , EyeOutlined  } from '@
 import Card from './card';
 import { ClockCircleOutlined } from '@ant-design/icons';
 
-const AnalyticsCard = ({ totalTicketsSold, totalVendors }) => {   // ✅ added totalVendors
+const AnalyticsCard = ({ totalTicketsSold, totalVendors, totalRevenue }) => {   // ✅ added totalRevenue
 
   const facilityList = useSelector((state) => state.facility?.list || []);
   const issueList = useSelector((state) => state.reportIssue?.list || []);
@@ -48,7 +48,7 @@ const AnalyticsCard = ({ totalTicketsSold, totalVendors }) => {   // ✅ added t
             <Link to="/facility" style={{ textDecoration: 'none' }}>
               <Card
                 title="Total Revenue"
-                count={10}
+                count={totalRevenue}   // ✅ replaced 10
                 color="#d0d7e4"
                 bgTheme="#000000"
                 icon={<DollarOutlined />}
@@ -60,7 +60,7 @@ const AnalyticsCard = ({ totalTicketsSold, totalVendors }) => {   // ✅ added t
             <Link to="/reportedIssues" style={{ textDecoration: 'none' }}>
               <Card
                 title="Active Vendors"
-                count={totalVendors}   // ✅ replaced 11
+                count={totalVendors}
                 color="#d0d7e4"
                 bgTheme="#000000"
                 icon={<CalendarOutlined />}
