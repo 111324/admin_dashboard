@@ -20,24 +20,30 @@ const Bookings = () => {
     dispatch(getOrdersRequest());
   }, [dispatch]);
 
+const capitalizeWords = (text) =>
+  text ? text.replace(/\b\w/g, (c) => c.toUpperCase()) : "-";
+
 const columns = [
   {
     field: "event",
     headerName: "Event",
     flex: 2,
-    valueGetter: (value, row) => row?.eventId?.eventName || "-"
+    valueGetter: (value, row) =>
+      capitalizeWords(row?.eventId?.eventName)
   },
   {
     field: "customer",
     headerName: "Customer",
     flex: 2,
-    valueGetter: (value, row) => row?.userId?.name || "Guest"
+    valueGetter: (value, row) =>
+      capitalizeWords(row?.userId?.name) || "Guest"
   },
   {
     field: "vendor",
     headerName: "Vendor",
     flex: 2,
-    valueGetter: (value, row) => row?.vendorId?.vendorName || "-"
+    valueGetter: (value, row) =>
+      capitalizeWords(row?.vendorId?.vendorName)
   },
   {
     field: "date",
@@ -62,13 +68,13 @@ const columns = [
       row?.totalAmount ? `₹${row.totalAmount}` : "-"
   }
 ];
-
   return (
     <Box p={3}>
 
       <Typography
-        variant="h5"
+        variant="h4"
         fontWeight="bold"
+        fontSize={"20px"}
         mb={3}
       >
         Total Bookings

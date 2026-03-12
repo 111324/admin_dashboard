@@ -5,14 +5,22 @@ import { useDispatch } from 'react-redux';
 import AnalyticsCard from './AnalyticsCard';
 import MainCard from 'ui-component/cards/MainCard';
 import axios from "axios";
+import { useSelector } from 'react-redux';
 
 const DashboardDefault = () => {
   const dispatch = useDispatch();
   const [limit] = useState(5);
   const [page] = useState(0);
+  const userData = useSelector((state) => state?.login?.userData || {});
 
   const [orders, setOrders] = useState([]);
   const [vendors, setVendors] = useState([]); // ✅ NEW
+
+
+  const name =
+    userData?.name
+      ? userData.name.replace(/\b\w/g, (c) => c.toUpperCase())
+      : "User";
 
   useEffect(() => {
 
@@ -83,7 +91,7 @@ const DashboardDefault = () => {
           <Box sx={{ display: 'flex', alignItems: 'center' }}>
             <Box
               sx={{
-                background: '#34699c',
+                background: '#fe7816',
                 color: '#fff',
                 borderRadius: '50%',
                 height: 40,
@@ -104,14 +112,14 @@ const DashboardDefault = () => {
               </Typography>
 
               <Typography sx={{ fontSize: 13 }}>
-                Hello, Admin 👋
+                Hello, {name}
               </Typography>
             </Box>
           </Box>
         </Box>
 
         {/* Analytics Cards */}
-        <AnalyticsCard 
+        <AnalyticsCard
           totalTicketsSold={totalTicketsSold}
           totalVendors={totalVendors}
           totalRevenue={totalRevenue}   // ✅ added revenue

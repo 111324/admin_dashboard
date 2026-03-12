@@ -14,6 +14,9 @@ import {
 
 import { getVendorSubscriptions } from "../../container/subscriptioncontainer/slice";
 
+const capitalizeWords = (text) =>
+  text ? text.replace(/\b\w/g, (c) => c.toUpperCase()) : "-";
+
 const AdminSubscription = () => {
 
   const dispatch = useDispatch();
@@ -30,7 +33,7 @@ const { vendors = [], loading = false } =
 
     <Box sx={{ p: 4 }}>
 
-      <Typography variant="h4" sx={{ mb: 3 }}>
+      <Typography variant="h4" fontSize={"20px"} sx={{ mb: 3 }}>
         Vendor Subscriptions
       </Typography>
 
@@ -57,14 +60,14 @@ const { vendors = [], loading = false } =
 
               <TableRow key={vendor._id}>
 
-                <TableCell>{vendor.vendor?.vendorName}</TableCell>
+                <TableCell>{capitalizeWords(vendor.vendor?.vendorName)}</TableCell>
 
                 <TableCell>
-                  {vendor.plan}
+                  {capitalizeWords(vendor.plan)}
                 </TableCell>
 
                 <TableCell>
-                  {vendor.status}
+                  {capitalizeWords(vendor.status)}
                 </TableCell>
 
                 <TableCell>

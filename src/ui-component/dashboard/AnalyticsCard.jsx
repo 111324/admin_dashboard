@@ -1,13 +1,10 @@
 import React from 'react';
-import { Grid, Box } from '@mui/material';
-import { Link } from 'react-router-dom';
+import { Grid } from '@mui/material';
 import { useSelector } from 'react-redux';
-import { blueGrey } from '@mui/material/colors';
-import { TagsOutlined, DollarOutlined, CalendarOutlined , EyeOutlined  } from '@ant-design/icons';
+import { TagsOutlined, DollarOutlined, TeamOutlined , CreditCardOutlined  } from '@ant-design/icons';
 import Card from './card';
-import { ClockCircleOutlined } from '@ant-design/icons';
 
-const AnalyticsCard = ({ totalTicketsSold, totalVendors, totalRevenue }) => {   // ✅ added totalRevenue
+const AnalyticsCard = ({ totalTicketsSold, totalVendors, totalRevenue }) => {
 
   const facilityList = useSelector((state) => state.facility?.list || []);
   const issueList = useSelector((state) => state.reportIssue?.list || []);
@@ -17,8 +14,6 @@ const AnalyticsCard = ({ totalTicketsSold, totalVendors, totalRevenue }) => {   
   const draftFacilities = useSelector((state) => state.facility?.draftList || []);
 
   const draftCount = draftFacilities.length;
-
-  console.log('FacilityList in Dashboar = ', facilityList);
 
   const counts = {
     facilities: useSelector((state) => state.facility?.listCount || 0),
@@ -31,53 +26,45 @@ const AnalyticsCard = ({ totalTicketsSold, totalVendors, totalRevenue }) => {   
     <Grid container item xs={12} spacing={2.5}>
       <Grid item xs={12}>
         <Grid container spacing={2.5}>
-          
+
           <Grid item xs={12} sm={6} md={3}>
-            <Link to="/userManagment" style={{ textDecoration: 'none' }}>
-              <Card
-                title="Total Ticket Sold"
-                count={totalTicketsSold}
-                color="#d0d7e4"
-                bgTheme="#000000"
-                icon={<TagsOutlined />}
-              />
-            </Link>
+            <Card
+              title="Total Ticket Sold"
+              count={totalTicketsSold}
+              color="#d0d7e4"
+              bgTheme="#000000"
+              icon={<TagsOutlined />}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <Link to="/facility" style={{ textDecoration: 'none' }}>
-              <Card
-                title="Total Revenue"
-                count={totalRevenue}   // ✅ replaced 10
-                color="#d0d7e4"
-                bgTheme="#000000"
-                icon={<DollarOutlined />}
-              />
-            </Link>
+            <Card
+              title="Total Revenue"
+              count={`₹${Number(totalRevenue).toLocaleString("en-IN")}`}
+              color="#d0d7e4"
+              bgTheme="#000000"
+              icon={<DollarOutlined />}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <Link to="/reportedIssues" style={{ textDecoration: 'none' }}>
-              <Card
-                title="Active Vendors"
-                count={totalVendors}
-                color="#d0d7e4"
-                bgTheme="#000000"
-                icon={<CalendarOutlined />}
-              />
-            </Link>
+            <Card
+              title="Active Vendors"
+              count={totalVendors}
+              color="#d0d7e4"
+              bgTheme="#000000"
+              icon={<TeamOutlined  />}
+            />
           </Grid>
 
           <Grid item xs={12} sm={6} md={3}>
-            <Link to="/rating" style={{ textDecoration: 'none' }}>
-              <Card
-                title="Total subscription"
-                count={200}
-                color="#d0d7e4"
-                bgTheme="#000000"
-                icon={<EyeOutlined />}
-              />
-            </Link>
+            <Card
+              title="Total Subscription"
+              count={200}
+              color="#d0d7e4"
+              bgTheme="#000000"
+              icon={<CreditCardOutlined  />}
+            />
           </Grid>
 
         </Grid>

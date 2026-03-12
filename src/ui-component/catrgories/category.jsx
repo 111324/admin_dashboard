@@ -50,7 +50,7 @@ export default function Categories() {
       sx={{
         padding: "30px",
         minHeight: "100vh",
-        background: "linear-gradient(135deg,#0a0a0a,#111827,#0f172a)",
+        
         color: "#fff"
       }}
     >
@@ -66,13 +66,10 @@ export default function Categories() {
 
         <Box>
           <Typography
-            variant="h5"
+            variant="h4"
+            fontSize={"20px"}
             fontWeight="bold"
-            sx={{
-              background: "linear-gradient(90deg,#f97316,#fb923c)",
-              WebkitBackgroundClip: "text",
-              WebkitTextFillColor: "transparent"
-            }}
+           
           >
             Event Categories
           </Typography>
@@ -111,7 +108,7 @@ export default function Categories() {
 
             <Card
               sx={{
-                background: "rgba(30,41,59,0.6)",
+                background: "#121821",
                 backdropFilter: "blur(8px)",
                 borderRadius: "14px",
                 padding: "6px",
@@ -170,7 +167,7 @@ export default function Categories() {
                   fontWeight="bold"
                   sx={{ fontSize: "15px" }}
                 >
-                  {cat.name}
+                  {cat.name?.replace(/\b\w/g, (c) => c.toUpperCase())}
                 </Typography>
 
                 {/* DESCRIPTION */}
@@ -201,9 +198,6 @@ export default function Categories() {
                     {new Date(cat.createdAt).toLocaleDateString()}
                   </Typography>
 
-                  <IconButton size="small">
-                    <MoreHorizIcon sx={{ color: "#d1d5db", fontSize: 18 }} />
-                  </IconButton>
 
                 </Box>
 
@@ -233,7 +227,7 @@ export default function Categories() {
         }}
       >
 
-        <DialogTitle sx={{ color: "#f97316", fontWeight: "bold" }}>
+        <DialogTitle sx={{ color: "#ff7a00",fontSize:"15px", fontWeight: "bold" }}>
           Add Category
         </DialogTitle>
 

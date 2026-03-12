@@ -20,6 +20,7 @@ import {
   InputAdornment
 } from "@mui/material";
 
+import EditIcon from "@mui/icons-material/Edit";
 import CloseIcon from "@mui/icons-material/Close";
 import AddIcon from "@mui/icons-material/Add";
 import MoreHorizIcon from "@mui/icons-material/MoreHoriz";
@@ -38,6 +39,8 @@ const Vendor = () => {
   const { vendors } = useSelector((state) => state.vendor);
 
   const [open, setOpen] = useState(false);
+
+  const [search, setSearch] = useState("");
 
   const [formData, setFormData] = useState({
     vendorName: "",
@@ -75,6 +78,12 @@ const Vendor = () => {
     setOpen(false);
   };
 
+  const filteredVendors = vendors?.filter((vendor) =>
+    vendor.vendorName?.toLowerCase().includes(search.toLowerCase()) ||
+    vendor.vendorEmail?.toLowerCase().includes(search.toLowerCase()) ||
+    vendor.city?.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
 
     <Box p={3}>
@@ -90,7 +99,7 @@ const Vendor = () => {
 
         <Box>
 
-          <Typography variant="h5" fontWeight="bold">
+          <Typography variant="h4" fontWeight="bold" fontSize={"20px"}>
             Vendors
           </Typography>
 
@@ -105,12 +114,13 @@ const Vendor = () => {
           startIcon={<AddIcon />}
           onClick={() => setOpen(true)}
           sx={{
-            background: "#ff8c00",
-            borderRadius: "8px",
+            background: "linear-gradient(135deg,#f97316,#ea580c)",
+            borderRadius: "10px",
             textTransform: "none",
             fontWeight: "bold",
-            px: 3,
-            "&:hover": { background: "#ff7700" }
+            padding: "8px 18px",
+            fontSize: "13px",
+            boxShadow: "0 4px 14px rgba(249,115,22,0.35)"
           }}
         >
           Add Vendor
@@ -123,6 +133,8 @@ const Vendor = () => {
       <TextField
         placeholder="Search vendors..."
         fullWidth
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
         sx={{
           mb: 3,
           maxWidth: 420,
@@ -153,7 +165,7 @@ const Vendor = () => {
 
           <TableHead
             sx={{
-              background: "#0d0c0c"
+              background: "#2b1a0f",
             }}
           >
 
@@ -162,7 +174,7 @@ const Vendor = () => {
               <TableCell><b>Vendor</b></TableCell>
               <TableCell><b>Email</b></TableCell>
               <TableCell><b>City</b></TableCell>
-              <TableCell><b>Events</b></TableCell>
+
               <TableCell><b>Status</b></TableCell>
               <TableCell></TableCell>
 
@@ -172,7 +184,7 @@ const Vendor = () => {
 
           <TableBody>
 
-            {vendors?.length === 0 ? (
+            {filteredVendors?.length === 0 ? (
 
               <TableRow>
                 <TableCell colSpan={6} align="center">
@@ -182,15 +194,11 @@ const Vendor = () => {
 
             ) : (
 
-              vendors?.map((vendor, index) => (
+              filteredVendors?.map((vendor, index) => (
 
                 <TableRow
                   key={index}
-                  sx={{
-                    "&:hover": {
-                      background: "#100f0f"
-                    }
-                  }}
+
                 >
 
                   <TableCell>
@@ -203,17 +211,18 @@ const Vendor = () => {
 
                       <Avatar
                         sx={{
-                          bgcolor: "#ff8c00",
+                          bgcolor: "#fe7816",
                           width: 36,
                           height: 36,
-                          fontWeight: "bold"
+                          color: "white",
+
                         }}
                       >
                         {vendor.vendorName?.charAt(0).toUpperCase()}
                       </Avatar>
 
                       <Typography fontWeight="500">
-                        {vendor.vendorName}
+                        {vendor.vendorName?.charAt(0).toUpperCase() + vendor.vendorName?.slice(1)}
                       </Typography>
 
                     </Stack>
@@ -222,14 +231,18 @@ const Vendor = () => {
 
                   <TableCell>{vendor.vendorEmail}</TableCell>
 
-                  <TableCell>{vendor.city}</TableCell>
+                  <TableCell>{vendor.city?.charAt(0).toUpperCase() + vendor.city?.slice(1)}</TableCell>
 
-                  <TableCell>{vendor.events || 0}</TableCell>
+
 
                   <TableCell>
 
                     <Chip
-                      label={vendor.status || "Active"}
+                      label={
+                        vendor.status
+                          ? vendor.status.charAt(0).toUpperCase() + vendor.status.slice(1)
+                          : "Active"
+                      }
                       size="small"
                       sx={{
                         fontWeight: "bold"
@@ -241,8 +254,12 @@ const Vendor = () => {
 
                   <TableCell>
 
-                    <IconButton>
-                      <MoreHorizIcon />
+                    <IconButton
+                      sx={{
+                        color: "#ff8c00"
+                      }}
+                    >
+                      <EditIcon />
                     </IconButton>
 
                   </TableCell>
@@ -283,7 +300,7 @@ const Vendor = () => {
             mb={3}
           >
 
-            <Typography variant="h6" fontWeight="bold">
+            <Typography variant="h4" fontWeight="bold" fontSize={"20px"} color={"#ff7a00"}>
               Add Vendor
             </Typography>
 
@@ -328,14 +345,6 @@ const Vendor = () => {
               fullWidth
             />
 
-            <TextField
-              label="Events"
-              name="events"
-              type="number"
-              value={formData.events}
-              onChange={handleChange}
-              fullWidth
-            />
 
             <TextField
               select
@@ -355,12 +364,13 @@ const Vendor = () => {
               variant="contained"
               onClick={handleSubmit}
               sx={{
-                background: "#ff8c00",
-                borderRadius: "8px",
-                fontWeight: "bold",
+                background: "linear-gradient(135deg,#f97316,#ea580c)",
+                borderRadius: "10px",
                 textTransform: "none",
-                height: 45,
-                "&:hover": { background: "#ff7700" }
+                fontWeight: "bold",
+                padding: "8px 18px",
+                fontSize: "13px",
+                boxShadow: "0 4px 14px rgba(249,115,22,0.35)"
               }}
             >
               Create Vendor
