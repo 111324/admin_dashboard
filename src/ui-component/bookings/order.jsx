@@ -1,126 +1,153 @@
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import {
   Box,
   Typography,
-  Card,
-  Grid,
+  Stack,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableHead,
+  TableRow,
+  Paper,
+  TextField,
+  InputAdornment,
+  Avatar,
   Chip
 } from "@mui/material";
-import { DataGrid } from "@mui/x-data-grid";
+
+import SearchIcon from "@mui/icons-material/Search";
 import { useDispatch, useSelector } from "react-redux";
 import { getOrdersRequest } from "../../container/orderContainer/slice";
 
 const Bookings = () => {
-
   const dispatch = useDispatch();
-
   const orders = useSelector((state) => state.order?.orders || []);
+
+  const [search, setSearch] = useState("");
 
   useEffect(() => {
     dispatch(getOrdersRequest());
   }, [dispatch]);
 
-const capitalizeWords = (text) =>
-  text ? text.replace(/\b\w/g, (c) => c.toUpperCase()) : "-";
+  const capitalizeWords = (text) =>
+    text ? text.replace(/\b\w/g, (c) => c.toUpperCase()) : "-";
 
-const columns = [
-  {
-    field: "event",
-    headerName: "Event",
-    flex: 2,
-    valueGetter: (value, row) =>
-      capitalizeWords(row?.eventId?.eventName)
-  },
-  {
-    field: "customer",
-    headerName: "Customer",
-    flex: 2,
-    valueGetter: (value, row) =>
-      capitalizeWords(row?.userId?.name) || "Guest"
-  },
-  {
-    field: "vendor",
-    headerName: "Vendor",
-    flex: 2,
-    valueGetter: (value, row) =>
-      capitalizeWords(row?.vendorId?.vendorName)
-  },
-  {
-    field: "date",
-    headerName: "Date",
-    flex: 1.5,
-    valueGetter: (value, row) =>
-      row?.createdAt
-        ? new Date(row.createdAt).toLocaleDateString("en-IN")
-        : "-"
-  },
-  {
-    field: "tickets",
-    headerName: "Tickets",
-    flex: 1,
-    valueGetter: (value, row) => row?.quantity ?? "-"
-  },
-  {
-    field: "amount",
-    headerName: "Amount",
-    flex: 1,
-    valueGetter: (value, row) =>
-      row?.totalAmount ? `₹${row.totalAmount}` : "-"
-  }
-];
+  const filteredOrders = orders?.filter((order) =>
+    order?.eventId?.eventName?.toLowerCase().includes(search.toLowerCase()) ||
+    order?.userId?.name?.toLowerCase().includes(search.toLowerCase()) ||
+    order?.vendorId?.vendorName?.toLowerCase().includes(search.toLowerCase())
+  );
+
   return (
     <Box p={3}>
-
-      <Typography
-        variant="h4"
-        fontWeight="bold"
-        fontSize={"20px"}
+      {/* HEADER */}
+      <Stack
+        direction="row"
+        justifyContent="space-between"
+        alignItems="center"
         mb={3}
       >
-        Total Bookings
-      </Typography>
+        <Box>
+          <Typography variant="h4" fontWeight="bold" fontSize={"20px"}>
+            Total Bookings
+          </Typography>
+          <Typography variant="body2" color="gray">
+            {orders?.length || 0} bookings registered
+          </Typography>
+        </Box>
+      </Stack>
 
-      {/* Summary Cards */}
-
-      <Grid container spacing={2} mb={3}>
-
-        <Grid item xs={12} md={3}>
-          <Card sx={{ p: 2 }}>
-            <Typography variant="body2">
-              Total Bookings
-            </Typography>
-            <Typography variant="h6">
-              {orders.length}
-            </Typography>
-          </Card>
-        </Grid>
-
-      </Grid>
-
-      {/* Table */}
-
-      <Box
+      {/* SEARCH */}
+      <TextField
+        placeholder="Search bookings..."
+        fullWidth
+        value={search}
+        onChange={(e) => setSearch(e.target.value)}
         sx={{
-          height: 500,
-          background: "#1e1e2f",
-          borderRadius: 2
+          mb: 3,
+          maxWidth: 420,
+          background: "#0b0b0b",
+          borderRadius: "8px"
+        }}
+        InputProps={{
+          startAdornment: (
+            <InputAdornment position="start">
+              <SearchIcon />
+            </InputAdornment>
+          )
+        }}
+      />
+
+      {/* TABLE */}
+      <TableContainer
+        component={Paper}
+        sx={{
+          borderRadius: "12px",
+          overflow: "hidden",
+          boxShadow: "0px 6px 18px rgba(0,0,0,0.08)"
         }}
       >
+        <Table>
+          <TableHead
+            sx={{
+              background: "#2b1a0f",
+            }}
+          >
+            <TableRow>
+              <TableCell><b>Event</b></TableCell>
+              <TableCell><b>Customer</b></TableCell>
+              <TableCell><b>Vendor</b></TableCell>
+              <TableCell><b>Date</b></TableCell>
+              <TableCell><b>Tickets</b></TableCell>
+              <TableCell><b>Amount</b></TableCell>
+            </TableRow>
+          </TableHead>
 
-        <DataGrid
-          rows={orders}
-          columns={columns}
-          getRowId={(row) => row._id}
-          pageSizeOptions={[5, 10, 20]}
-          initialState={{
-            pagination: {
-              paginationModel: { pageSize: 5 }
-            }
-          }}
-        />
-
-      </Box>
-
+          <TableBody>
+            {filteredOrders?.length === 0 ? (
+              <TableRow>
+                <TableCell colSpan={6} align="center">
+                  No Bookings Found
+                </TableCell>
+              </TableRow>
+            ) : (
+              filteredOrders?.map((order, index) => (
+                <TableRow key={order._id || index}>
+                  <TableCell>
+                    <Stack direction="row" spacing={2} alignItems="center">
+                      <Avatar
+                        sx={{
+                          bgcolor: "#fe7816",
+                          width: 36,
+                          height: 36,
+                          color: "white",
+                        }}
+                      >
+                        {order?.eventId?.eventName?.charAt(0).toUpperCase() || "E"}
+                      </Avatar>
+                      <Typography fontWeight="500">
+                        {capitalizeWords(order?.eventId?.eventName)}
+                      </Typography>
+                    </Stack>
+                  </TableCell>
+                  <TableCell>{capitalizeWords(order?.userId?.name) || "Guest"}</TableCell>
+                  <TableCell>{capitalizeWords(order?.vendorId?.vendorName)}</TableCell>
+                  <TableCell>
+                    {order?.createdAt
+                      ? new Date(order.createdAt).toLocaleDateString("en-IN")
+                      : "-"}
+                  </TableCell>
+                  <TableCell>{order?.quantity ?? "-"}</TableCell>
+                  <TableCell>
+                    {order?.totalAmount ? `₹${order.totalAmount}` : "-"}
+                  </TableCell>
+                </TableRow>
+              ))
+            )}
+          </TableBody>
+        </Table>
+      </TableContainer>
     </Box>
   );
 };

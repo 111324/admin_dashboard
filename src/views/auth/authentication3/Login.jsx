@@ -82,7 +82,7 @@ const AuthLogin = (props) => {
           mb: 1
         }}
       >
-        Welcome Back
+        Welcome Back, Admin
       </Typography>
 
       <Typography
@@ -93,7 +93,7 @@ const AuthLogin = (props) => {
           color: 'text.secondary'
         }}
       >
-        Login to manage your events
+        Login to access and manage the platform dashboard.
       </Typography>
 
 

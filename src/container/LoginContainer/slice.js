@@ -6,6 +6,7 @@ const loginSlice = createSlice({
         data: {},
         userData: [],
         loading: false,
+         isInitialized: false,  
         error: null
     },
     reducers: {
@@ -33,10 +34,13 @@ const loginSlice = createSlice({
         userMeSuccess: (state, action) => {
          state.loading = false;
             state.userData = action.payload;
+             state.isInitialized = true;     
             state.error = null;
         },
-        userMeFail: (state, action) => {
+        userMeFail: (state) => {
             state.loading = false;
+            state.userData = null;             
+      state.isInitialized = true;
         }
     }
 });

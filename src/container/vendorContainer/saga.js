@@ -6,7 +6,10 @@ import {
   createVendorFail,
   getVendorRequest,
   getVendorSuccess,
-  getVendorFail
+  getVendorFail,
+  updateVendorRequest,
+  updateVendorSuccess,
+  updateVendorFail
 } from "./slice";
 
 /* ================= API ================= */
@@ -21,6 +24,13 @@ const createVendorApi = (data) =>
 const getVendorApi = () =>
   axios.get(
     "http://localhost:5000/api/vendors",
+    { withCredentials: true }
+  );
+
+const updateVendorApi = (id, data) =>
+  axios.put(
+    `http://localhost:5000/api/updatevendor/${id}`,
+    data,
     { withCredentials: true }
   );
 
@@ -66,6 +76,27 @@ function* getVendorSaga() {
   }
 }
 
+/* ================= UPDATE VENDOR ================= */
+
+function* updateVendorSaga(action) {
+  try {
+    const { id, data } = action.payload;
+
+    const response = yield call(updateVendorApi, id, data);
+
+    const vendor = response?.data?.vendor;
+
+    yield put(updateVendorSuccess(vendor));
+
+  } catch (error) {
+
+    const message =
+      error?.response?.data?.message || "Vendor update failed";
+
+    yield put(updateVendorFail(message));
+  }
+}
+
 /* ================= WATCHER ================= */
 
 function* vendorSaga() {
@@ -73,6 +104,8 @@ function* vendorSaga() {
   yield takeLatest(createVendorRequest.type, createVendorSaga);
 
   yield takeLatest(getVendorRequest.type, getVendorSaga);
+
+  yield takeLatest(updateVendorRequest.type, updateVendorSaga);
 
 }
 

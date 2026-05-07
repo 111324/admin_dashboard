@@ -4,7 +4,7 @@ import { useSelector } from 'react-redux';
 import { TagsOutlined, DollarOutlined, TeamOutlined , CreditCardOutlined  } from '@ant-design/icons';
 import Card from './card';
 
-const AnalyticsCard = ({ totalTicketsSold, totalVendors, totalRevenue }) => {
+const AnalyticsCard = ({ totalTicketsSold, totalVendors, totalRevenue,totalsubscripition }) => {
 
   const facilityList = useSelector((state) => state.facility?.list || []);
   const issueList = useSelector((state) => state.reportIssue?.list || []);
@@ -60,7 +60,7 @@ const AnalyticsCard = ({ totalTicketsSold, totalVendors, totalRevenue }) => {
           <Grid item xs={12} sm={6} md={3}>
             <Card
               title="Total Subscription"
-              count={200}
+              count={totalsubscripition}
               color="#d0d7e4"
               bgTheme="#000000"
               icon={<CreditCardOutlined  />}

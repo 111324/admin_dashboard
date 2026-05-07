@@ -30,7 +30,8 @@ import { useDispatch, useSelector } from "react-redux";
 
 import {
   createVendorRequest,
-  getVendorRequest
+  getVendorRequest,
+  updateVendorRequest
 } from "../../container/vendorContainer/slice";
 
 const Vendor = () => {
@@ -51,6 +52,9 @@ const Vendor = () => {
     password: ""
   });
 
+  const [isEdit, setIsEdit] = useState(false);
+  const [editId, setEditId] = useState(null);
+
   useEffect(() => {
     dispatch(getVendorRequest());
   }, [dispatch]);
@@ -64,7 +68,11 @@ const Vendor = () => {
 
   const handleSubmit = () => {
 
-    dispatch(createVendorRequest(formData));
+    if (isEdit) {
+      dispatch(updateVendorRequest({ id: editId, data: formData }));
+    } else {
+      dispatch(createVendorRequest(formData));
+    }
 
     setFormData({
       vendorName: "",
@@ -76,6 +84,23 @@ const Vendor = () => {
     });
 
     setOpen(false);
+    setIsEdit(false);
+    setEditId(null);
+  };
+
+  const handleEdit = (vendor) => {
+    setFormData({
+      vendorName: vendor.vendorName || "",
+      vendorEmail: vendor.vendorEmail || "",
+      city: vendor.city || "",
+      events: vendor.events || "",
+      status: vendor.status || "Active",
+      password: "" // Keep password blank unless changing
+    });
+
+    setEditId(vendor._id);
+    setIsEdit(true);
+    setOpen(true);
   };
 
   const filteredVendors = vendors?.filter((vendor) =>
@@ -255,6 +280,7 @@ const Vendor = () => {
                   <TableCell>
 
                     <IconButton
+                      onClick={() => handleEdit(vendor)}
                       sx={{
                         color: "#ff8c00"
                       }}
@@ -281,7 +307,19 @@ const Vendor = () => {
       <Drawer
         anchor="right"
         open={open}
-        onClose={() => setOpen(false)}
+        onClose={() => {
+          setOpen(false);
+          setIsEdit(false);
+          setEditId(null);
+          setFormData({
+            vendorName: "",
+            vendorEmail: "",
+            city: "",
+            events: "",
+            status: "Active",
+            password: ""
+          });
+        }}
       >
 
         <Box
@@ -301,10 +339,14 @@ const Vendor = () => {
           >
 
             <Typography variant="h4" fontWeight="bold" fontSize={"20px"} color={"#ff7a00"}>
-              Add Vendor
+              {isEdit ? "Edit Vendor" : "Add Vendor"}
             </Typography>
 
-            <IconButton onClick={() => setOpen(false)}>
+            <IconButton onClick={() => {
+              setOpen(false);
+              setIsEdit(false);
+              setEditId(null);
+            }}>
               <CloseIcon />
             </IconButton>
 
@@ -373,7 +415,7 @@ const Vendor = () => {
                 boxShadow: "0 4px 14px rgba(249,115,22,0.35)"
               }}
             >
-              Create Vendor
+              {isEdit ? "Update Vendor" : "Create Vendor"}
             </Button>
 
           </Stack>

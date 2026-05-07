@@ -58,6 +58,34 @@ const vendorSlice = createSlice({
       state.error = action.payload;
     },
 
+    /* =========================
+       UPDATE VENDOR
+    ========================= */
+
+    updateVendorRequest: (state, action) => {
+      state.loading = true;
+      state.error = null;
+      state.success = false;
+    },
+
+    updateVendorSuccess: (state, action) => {
+      state.loading = false;
+      state.success = true;
+
+      // update vendor in list
+      const index = state.vendors.findIndex(
+        (v) => v._id === action.payload._id
+      );
+      if (index !== -1) {
+        state.vendors[index] = action.payload;
+      }
+    },
+
+    updateVendorFail: (state, action) => {
+      state.loading = false;
+      state.error = action.payload;
+    },
+
 
 
     /* =========================
@@ -80,6 +108,10 @@ export const {
   getVendorRequest,
   getVendorSuccess,
   getVendorFail,
+
+  updateVendorRequest,
+  updateVendorSuccess,
+  updateVendorFail,
 
   resetVendorState
 } = vendorSlice.actions;

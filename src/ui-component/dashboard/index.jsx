@@ -4,6 +4,7 @@ import { UserOutlined } from '@ant-design/icons';
 import { useDispatch } from 'react-redux';
 import AnalyticsCard from './AnalyticsCard';
 import MainCard from 'ui-component/cards/MainCard';
+import { getVendorSubscriptions } from '../../container/subscriptioncontainer/slice';
 import axios from "axios";
 import { useSelector } from 'react-redux';
 
@@ -14,7 +15,8 @@ const DashboardDefault = () => {
   const userData = useSelector((state) => state?.login?.userData || {});
 
   const [orders, setOrders] = useState([]);
-  const [vendors, setVendors] = useState([]); // ✅ NEW
+  const [vendors, setVendors] = useState([]); 
+  const subscriptionList = useSelector((state) => state.subscription?.vendors || []);
 
 
   const name =
@@ -58,6 +60,7 @@ const DashboardDefault = () => {
 
     fetchOrders();
     fetchVendors();
+    dispatch(getVendorSubscriptions());
 
   }, [dispatch, limit, page]);
 
@@ -122,7 +125,8 @@ const DashboardDefault = () => {
         <AnalyticsCard
           totalTicketsSold={totalTicketsSold}
           totalVendors={totalVendors}
-          totalRevenue={totalRevenue}   // ✅ added revenue
+          totalRevenue={totalRevenue}
+          totalsubscripition={subscriptionList.length}
         />
 
       </Box>
